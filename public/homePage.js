@@ -18,6 +18,7 @@ ApiConnector.current(serverResponse => {
     }
 })
 
+
 const rates = new RatesBoard();
 //console.log(rates);
 function currantRates () {
@@ -28,4 +29,4 @@ function currantRates () {
         }
     })
 }
-csetInterval(ratesUpdate(), 60000);
+setInterval(currantRates(), 60000);
