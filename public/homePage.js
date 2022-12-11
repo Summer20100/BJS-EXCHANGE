@@ -1,6 +1,6 @@
 'use strict';
 
-// Выход из личного кабинета
+// Выход из личного кабинета //
 
 const logout = new LogoutButton();
 logout.action = function() {
@@ -11,7 +11,7 @@ logout.action = function() {
     })
 }
 
-// Получение информации о пользователе
+// Получение информации о пользователе //
 
 ApiConnector.current(response => {
     if (response.success) {
@@ -19,7 +19,7 @@ ApiConnector.current(response => {
     }
 })
 
-//Получение текущих курсов валюты
+// Получение текущих курсов валюты //
 
 const rates = new RatesBoard();
 function currantRates() {
@@ -35,14 +35,13 @@ setInterval(currantRates, 60000);
 
 // Операции с деньгами //
 
-// 1. Пополнение баланса
-
 const moneyManager = new MoneyManager();
+
+// 1. Пополнение баланса
 
 moneyManager.addMoneyCallback = function (balanceInc) {
     ApiConnector.addMoney(balanceInc, response => {
         if (response.success) {
-            moneyManager.addMoneyAction();
             ProfileWidget.showProfile(response.data);
             return moneyManager.setMessage(true, 'Успешное пополнение счета на' + balanceInc.currency + balanceInc.amount)
         } else {
@@ -55,9 +54,7 @@ moneyManager.addMoneyCallback = function (balanceInc) {
 
 moneyManager.conversionMoneyCallback = function(convert) {
     ApiConnector.convertMoney(convert, response => {
-        console.log(response);
         if (response.success) {
-            moneyManager.conversionMoneyAction();
             ProfileWidget.showProfile(response.data);
             return moneyManager.setMessage(true, 'Успешная конвертация суммы ' + convert.fromCurrency + convert.fromAmount)
         } else {
@@ -71,11 +68,50 @@ moneyManager.conversionMoneyCallback = function(convert) {
 moneyManager.sendMoneyCallback = function(trans) {
     ApiConnector.transferMoney(trans, response => {
         if (response.success) {
-            moneyManager.sendMoneyAction();
             ProfileWidget.showProfile(response.data);
             return moneyManager.setMessage(true, 'Успешный перевод ' + trans.currency + trans.amount + ' получателю ' + trans.to)
         } else {
             return moneyManager.setMessage(false, response.error)
+        }
+    })
+}
+
+// Работа с избранным //
+
+const favoritesWidget = new FavoritesWidget();
+
+// 1. Начальный список избранного
+
+ApiConnector.getFavorites(favorites => {
+    if (favorites.success) {
+        favoritesWidget.clearTable();
+        favoritesWidget.fillTable(favorites.data);
+        moneyManager.updateUsersList(favorites.data);
+    }
+})
+
+// 2. Добавление пользователя в список избранных
+
+favoritesWidget.addUserCallback  = function(addUser) {
+    ApiConnector.addUserToFavorites(addUser, response => {
+        if (response.success) {
+            ProfileWidget.showProfile(response.data);
+            return favoritesWidget.setMessage(true, 'Успешное добавление ' + addUser.name + ' с номером ' + addUser.id)
+        } else {
+            return favoritesWidget.setMessage(false, response.error)
+        }
+    })
+}
+
+// 3. Удаление пользователя из избранного
+
+favoritesWidget.removeUserCallback = function (id) {
+    ApiConnector.removeUserFromFavorites(id, response => {
+        if (response.success) {
+            ProfileWidget.showProfile(response.data);
+            return favoritesWidget.setMessage(true, 'Успешное удаление пользователя ' + id)
+        } else {
+            return favoritesWidget.setMessage(false, response.error)
         }
     })
 }
