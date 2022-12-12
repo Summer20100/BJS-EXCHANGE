@@ -95,8 +95,10 @@ ApiConnector.getFavorites(favorites => {
 favoritesWidget.addUserCallback  = function(addUser) {
     ApiConnector.addUserToFavorites(addUser, response => {
         if (response.success) {
-            ProfileWidget.showProfile(response.data);
-            return favoritesWidget.setMessage(true, 'Успешное добавление ' + addUser.name + ' с номером ' + addUser.id)
+            favoritesWidget.clearTable();
+            favoritesWidget.fillTable(response.data);
+            moneyManager.updateUsersList(response.data);
+            return favoritesWidget.setMessage(true, 'Успешное добавление пользователя # ' + addUser.id + ' : ' + addUser.name)
         } else {
             return favoritesWidget.setMessage(false, response.error)
         }
@@ -108,7 +110,9 @@ favoritesWidget.addUserCallback  = function(addUser) {
 favoritesWidget.removeUserCallback = function (id) {
     ApiConnector.removeUserFromFavorites(id, response => {
         if (response.success) {
-            ProfileWidget.showProfile(response.data);
+            favoritesWidget.clearTable();
+            favoritesWidget.fillTable(response.data);
+            moneyManager.updateUsersList(response.data);
             return favoritesWidget.setMessage(true, 'Успешное удаление пользователя ' + id)
         } else {
             return favoritesWidget.setMessage(false, response.error)
