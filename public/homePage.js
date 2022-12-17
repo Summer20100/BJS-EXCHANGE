@@ -43,9 +43,9 @@ moneyManager.addMoneyCallback = function (balanceInc) {
     ApiConnector.addMoney(balanceInc, response => {
         if (response.success) {
             ProfileWidget.showProfile(response.data);
-            return moneyManager.setMessage(true, 'Успешное пополнение счета на' + balanceInc.currency + balanceInc.amount)
+            moneyManager.setMessage(true, 'Успешное пополнение счета на' + balanceInc.currency + balanceInc.amount)
         } else {
-            return moneyManager.setMessage(false, response.error)
+            moneyManager.setMessage(false, response.error)
         }
     })
 }
@@ -56,9 +56,9 @@ moneyManager.conversionMoneyCallback = function(convert) {
     ApiConnector.convertMoney(convert, response => {
         if (response.success) {
             ProfileWidget.showProfile(response.data);
-            return moneyManager.setMessage(true, 'Успешная конвертация суммы ' + convert.fromCurrency + convert.fromAmount)
+            moneyManager.setMessage(true, 'Успешная конвертация суммы ' + convert.fromCurrency + convert.fromAmount)
         } else {
-            return moneyManager.setMessage(false, response.error)
+            moneyManager.setMessage(false, response.error)
         }
     })
 }
@@ -69,9 +69,9 @@ moneyManager.sendMoneyCallback = function(trans) {
     ApiConnector.transferMoney(trans, response => {
         if (response.success) {
             ProfileWidget.showProfile(response.data);
-            return moneyManager.setMessage(true, 'Успешный перевод ' + trans.currency + trans.amount + ' получателю ' + trans.to)
+            moneyManager.setMessage(true, 'Успешный перевод ' + trans.currency + trans.amount + ' получателю ' + trans.to)
         } else {
-            return moneyManager.setMessage(false, response.error)
+            moneyManager.setMessage(false, response.error)
         }
     })
 }
@@ -98,9 +98,9 @@ favoritesWidget.addUserCallback  = function(addUser) {
             favoritesWidget.clearTable();
             favoritesWidget.fillTable(response.data);
             moneyManager.updateUsersList(response.data);
-            return favoritesWidget.setMessage(true, 'Успешное добавление пользователя # ' + addUser.id + ' : ' + addUser.name)
+            favoritesWidget.setMessage(true, 'Успешное добавление пользователя # ' + addUser.id + ' : ' + addUser.name)
         } else {
-            return favoritesWidget.setMessage(false, response.error)
+            favoritesWidget.setMessage(false, response.error)
         }
     })
 }
@@ -113,9 +113,9 @@ favoritesWidget.removeUserCallback = function (id) {
             favoritesWidget.clearTable();
             favoritesWidget.fillTable(response.data);
             moneyManager.updateUsersList(response.data);
-            return favoritesWidget.setMessage(true, 'Успешное удаление пользователя ' + id)
+            favoritesWidget.setMessage(true, 'Успешное удаление пользователя ' + id)
         } else {
-            return favoritesWidget.setMessage(false, response.error)
+            favoritesWidget.setMessage(false, response.error)
         }
     })
 }
